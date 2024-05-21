@@ -3,9 +3,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Main {
@@ -139,12 +139,95 @@ public class Main {
         //-----------------------------------------------------
 
         /*
+
+        Another common data processing idiom is finding whether some elements in a set of
+        data match a given property. The Streams API provides such facilities through the
+        allMatch, anyMatch, noneMatch, findFirst, and findAny methods of a stream.
+
             noneMatch(Predicate<T> predicate) --> boolean
             allMatch(Predicate<T> predicate) --> boolean
             anyMatch(Predicate<T> predicate) --> boolean
             findFirst() --> Optional<T>
             findAny() --> Optional<T>
          */
+
+
+        //
+        /*
+        anyMatch(Predicate<T> predicate) --> The anyMatch method can be used to answer the question:
+        “Is there an element in thestream matching the given predicate?”
+         */
+        boolean isVegetarian = menu.stream().anyMatch(Dish::isVegetarian);
+        if (isVegetarian) System.out.println("Some dishes are vegetarian");
+
+        /*
+        allMatch(Predicate<T> predicate) --> The allMatch method works similarly to
+        anyMatch but will check to see if all the elements of the stream match the given predicate.
+         */
+        boolean isHealthyFood = menu.stream().allMatch(dish -> dish.getCalories() <= 1000);
+        if (isHealthyFood) System.out.println("Dishes have calories equals or smaller than 1000 calories.");
+
+        /*
+        nomeMatch(Predicate<T> predicate) --> The opposite of allMatch is noneMatch. It ensures that no
+        elements in the stream match the given predicate.
+         */
+        boolean isHealthy = menu.stream().noneMatch(dish -> dish.getCalories() > 1000);
+        if (isHealthy) System.out.println("Other way to verify if the dishes are healthy");
+
+        /*
+        findAny() --> The findAny method returns an arbitrary element of the current stream. It can be
+       used in conjunction with other stream operations. For example, you may wish to find a dish that’s vegetarian.
+       You can combine the filter method and findAny to express this query:
+         */
+
+        Optional<Dish> dish = menu.stream()
+                .filter(Dish::isVegetarian)
+                .findAny();
+
+        if (dish.isPresent()) System.out.println("There is some dishes that are vegetarian");
+        dish.ifPresent(i -> System.out.println(i.getName()));
+
+        /*
+        findFirst() --> Some streams have an encounter order that specifies the order in which items logically
+        appear in the stream (for example, a stream generated from a List or from a sorted
+        sequence of data). For such streams you may wish to find the first element. There’s
+        the findFirst method for this, which works similarly to findAny
+         */
+        List<Integer> someNumbers = Arrays.asList(1, 2, 3, 4, 5);
+        Optional<Integer> firstSquareDivisibleByThree =
+                someNumbers.stream()
+                        .map(n -> n * n)
+                        .filter(n -> n % 3 == 0)
+                        .findFirst();
+        firstSquareDivisibleByThree.ifPresent(integer -> System.out.println("Finding first square divisible by three: " +
+                integer));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 
