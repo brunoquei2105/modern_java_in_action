@@ -22,6 +22,6 @@ public class PrimesNumbers {
     public static Map<Boolean, List<Integer>> partitionPrimes(int n){
         return IntStream.rangeClosed(2, n)
                 .boxed()
-                .collect(Collectors.partitioningBy(i -> isPrime(i)));
+                .collect(Collectors.partitioningBy(PrimesNumbers::isPrime));
     }
 }
