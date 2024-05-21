@@ -138,7 +138,13 @@ public class Main {
         //            STREAM- FINDING AND MATCHING
         //-----------------------------------------------------
 
-
+        /*
+            noneMatch(Predicate<T> predicate) --> boolean
+            allMatch(Predicate<T> predicate) --> boolean
+            anyMatch(Predicate<T> predicate) --> boolean
+            findFirst() --> Optional<T>
+            findAny() --> Optional<T>
+         */
 
     }
 
