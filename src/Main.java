@@ -8,6 +8,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -202,31 +205,77 @@ public class Main {
         firstSquareDivisibleByThree.ifPresent(integer -> System.out.println("Finding first square divisible by three: " +
                 integer));
 
+        //-----------------------------------------------------
+        //            STREAM- REDUCING
+        //-----------------------------------------------------
+
+        /*
+            reduce(initialValue, BinaryOperator<T> binaryOperator)
+            SUMMING:
+            Each element of numbers is combined iteratively with the addition operator to form a
+            result. You reduce the list of numbers into one number by repeatedly using addition.
+         */
+
+        Integer sum = numbers.stream()
+                .reduce(0, Integer::sum);
+
+        Integer min = numbers.stream()
+                .reduce(0, Integer::min);
+
+        Integer max = numbers.stream()
+                .reduce(0, Integer::max);
+
+        System.out.println("The sum of numbers are: "+sum);
+        System.out.println("The min value is: "+min);
+        System.out.println("The max value is: "+max);
+
+        //-----------------------------------------------------
+        //            STREAM- COLLECTING
+        //-----------------------------------------------------
+
+        /*
+        grouping(Function<T> function) -->
+         */
+
+        Map<Dish.Type, List<Dish>> groupDishByType = menu.stream()
+                .collect(groupingBy(Dish::getType));
+
+        System.out.println(groupDishByType);
+
+        //Multilevel grouping
+        Map<Dish.Type, Map<CaloricLevel, List<Dish>>> dishByTypeCaloricLevel = menu.stream()
+                .collect(
+                        groupingBy(Dish::getType,
+                                groupingBy(i ->
+                                {
+                                    if (i.getCalories() <= 400) return CaloricLevel.DIET;
+                                    else if (i.getCalories() <= 700) return CaloricLevel.NORMAL;
+                                    else return CaloricLevel.FAT;
+                                })));
+
+        System.out.println(dishByTypeCaloricLevel);
 
 
+    //Collecting data in subgroups
+        Map<Dish.Type, Long> typesCount = menu.stream()
+                .collect(groupingBy(Dish::getType, counting()));
+        System.out.println(typesCount);
 
+        /*
+            partitioningBy(Predicate<T> predicate) --> Partitioning is a special case of grouping: having a predicate
+            called a partitioning function as a classification function. The fact that the partitioning function
+            returns a boolean means the resulting grouping Map will have a Boolean as a key type, and therefore,
+            there can be at most two different groups—one for true and one for false.
+         */
+        Map<Boolean, List<Dish>> partitionedMenu = menu.stream()
+                .collect(Collectors.partitioningBy(Dish::isVegetarian));
 
+        List<Dish> listOfDishThatAreVegetarian = partitionedMenu.get(true);
+        List<Dish> listOfDishThatAreNotVegetarian = partitionedMenu.get(false);
+        System.out.println(listOfDishThatAreVegetarian);
+        System.out.println(listOfDishThatAreNotVegetarian);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        System.out.println(partitionedMenu);
 
 
     }
